@@ -1,0 +1,9 @@
+{
+  "name": "ludo-cash-engine",
+  "version": "1.0.0",
+  "description": "Ludo Game with Cloudinary Streaming",
+  "dependencies": {
+    "busboy": "^1.6.0",
+    "cloudinary": "^2.0.3"
+  }
+}

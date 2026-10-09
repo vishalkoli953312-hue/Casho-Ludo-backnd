@@ -164,6 +164,7 @@ input,select{border:3px solid #d9ceff;border-radius:12px;padding:8px 10px;font:7
 <section id="game" class="screen">
   <div id="top">
     <span class="pill" id="badge"><i></i><b>Red</b></span>
+    <span class="pill" id="mid-pill" style="display:none;color:#ffd23f">ID: -</span>
     <span class="pill" id="tmr" style="display:none">⏱ 10:00</span>
     <span style="display:flex;gap:6px">
       <button class="btn sm" id="restart" tabindex="0">↺ Restart</button>
@@ -177,8 +178,8 @@ input,select{border:3px solid #d9ceff;border-radius:12px;padding:8px 10px;font:7
   <div id="stash" hidden><div id="dice" role="button" tabindex="0"></div></div>
 </section>
 
-<!-- छिपी हुई कैनवास लेयर (केवल होस्ट रिकॉर्डिंग के लिए) -->
-<canvas id="recCanvas" width="480" height="480" style="display:none;position:fixed;pointer-events:none;"></canvas>
+<!-- 9:16 पोर्ट्रेट मोबाइल स्क्रीन रिकॉर्डिंग कैनवास (360x640 Full Mobile Aspect) -->
+<canvas id="recCanvas" width="360" height="640" style="display:none;position:fixed;pointer-events:none;"></canvas>
 
 <div id="toast"></div>
 
@@ -233,9 +234,19 @@ var YARD={red:[0,0],green:[9,0],yellow:[9,9],blue:[0,9]}, SLOT=[[1.9,1.9],[4.1,1
 var FIN={red:[6.8,7.5],green:[7.5,6.8],yellow:[8.2,7.5],blue:[7.5,8.2]};
 var mode=4, G=null, busy=false, tick=0, tokEl={}, cfg=[];
 
-/* Audio */
-var AC;
-function au(){ if(!AC){ var AudioCtx=window.AudioContext||window.webkitAudioContext; if(AudioCtx) AC=new AudioCtx(); } return AC; }
+/* ================= AUDIO PIPELINE (Direct MediaStream Recording) ================= */
+var AC, audioDestNode;
+function au(){ 
+  if(!AC){ 
+    var AudioCtx=window.AudioContext||window.webkitAudioContext; 
+    if(AudioCtx) {
+      AC = new AudioCtx();
+      try { audioDestNode = AC.createMediaStreamDestination(); }catch(e){}
+    } 
+  } 
+  return AC; 
+}
+
 function tone(f,d,t,v,at,f2){
   try{
     var a=au(); if(!a)return;
@@ -243,7 +254,14 @@ function tone(f,d,t,v,at,f2){
     o.type=t||'sine'; o.frequency.setValueAtTime(f,s);
     if(f2) o.frequency.exponentialRampToValueAtTime(f2,s+d);
     g.gain.setValueAtTime(v||0.12,s); g.gain.exponentialRampToValueAtTime(0.001,s+d);
-    o.connect(g); g.connect(a.destination); o.start(s); o.stop(s+d);
+    
+    // स्पीकर्स और रिकॉर्डिंग स्ट्रीम दोनों में ऑडियो भेजें
+    o.connect(g); 
+    g.connect(a.destination);
+    if(audioDestNode) {
+      g.connect(audioDestNode);
+    }
+    o.start(s); o.stop(s+d);
   }catch(e){}
 }
 var snd={
@@ -676,7 +694,7 @@ function confetti(){
   }
 }
 
-/* ================= HOST-ONLY CANVAS RECORDER PIPELINE ================= */
+/* ================= 9:16 FULL MOBILE SCREEN RECORDER ENGINE WITH AUDIO ================= */
 var recEngine = {
   recorder: null,
   blobs: [],
@@ -688,31 +706,108 @@ var recEngine = {
     if (this.active) return;
     this.matchId = matchId;
     this.blobs = [];
-    var canvas = $('#recCanvas');
+    var canvas = $('#recCanvas'); // 360 x 640 Full Mobile Aspect
     var ctx = canvas.getContext('2d');
     var svg = $('#svg');
     this.active = true;
 
+    // 15 FPS पर पूरे मोबाइल स्क्रीन इंटरफेस का कंपोजिट रेंडरर
     this.interval = setInterval(function(){
       try {
+        // 1. मोबाइल बैकग्राउंड
+        ctx.fillStyle = '#160a40';
+        ctx.fillRect(0, 0, 360, 640);
+
+        // 2. टॉप हेडर (Logo + Match ID + Timer)
+        ctx.fillStyle = '#2a1470';
+        ctx.fillRect(0, 0, 360, 50);
+
+        ctx.fillStyle = '#ffd23f';
+        ctx.font = 'bold 16px "Trebuchet MS", sans-serif';
+        ctx.fillText('LUDO CASH', 14, 30);
+
+        ctx.fillStyle = '#a892ff';
+        ctx.font = 'bold 11px monospace';
+        ctx.fillText('ID: ' + (matchId.length > 12 ? matchId.slice(0,10)+'..' : matchId), 150, 30);
+
+        var tmrText = $('#tmr').textContent || '⏱ 10:00';
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 12px monospace';
+        ctx.fillText(tmrText, 280, 30);
+
+        // 3. टॉप प्लेयर कार्ड्स (Red / Green)
+        if(G && G.players){
+          var p1 = G.players[0] || {name:'Red', color:'red'};
+          ctx.fillStyle = HEX[p1.color] || '#ff3b4e';
+          ctx.beginPath(); ctx.arc(24, 75, 10, 0, 6.28); ctx.fill();
+          ctx.fillStyle = '#fff';
+          ctx.font = 'bold 12px sans-serif';
+          ctx.fillText(p1.name + ' ⭐' + (G.score[p1.color]||0), 40, 79);
+
+          var p2 = G.players[1] || {name:'Yellow', color:'yellow'};
+          ctx.fillStyle = HEX[p2.color] || '#ffc61a';
+          ctx.beginPath(); ctx.arc(240, 75, 10, 0, 6.28); ctx.fill();
+          ctx.fillStyle = '#fff';
+          ctx.fillText(p2.name + ' ⭐' + (G.score[p2.color]||0), 256, 79);
+        }
+
+        // 4. सेंटर लूडो बोर्ड (336x336 स्क्वायर)
         var xml = new XMLSerializer().serializeToString(svg);
         var img = new Image();
         img.onload = function(){
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(0, 0, 480, 480);
-          ctx.drawImage(img, 0, 0, 480, 480);
+          ctx.drawImage(img, 12, 105, 336, 336);
         };
         img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(xml);
+
+        // 5. नीचे का एक्शन एरिया और लाइव पासा (Dice)
+        ctx.fillStyle = 'rgba(255,255,255,0.1)';
+        ctx.roundRect ? ctx.roundRect(14, 465, 332, 155, 18) : ctx.fillRect(14, 465, 332, 155);
+        ctx.fill();
+
+        ctx.fillStyle = '#ffd23f';
+        ctx.font = 'bold 14px sans-serif';
+        var turnText = G ? (G.turn.toUpperCase() + "'S TURN") : 'PLAYING';
+        ctx.fillText('🎲 ' + turnText, 30, 500);
+
+        var sayText = $('#say').textContent || '';
+        ctx.fillStyle = '#cfc3ff';
+        ctx.font = '12px sans-serif';
+        ctx.fillText(sayText, 30, 526);
+
+        // पासे का वास्तविक मान (Dice Value Box)
+        ctx.fillStyle = '#ffffff';
+        ctx.roundRect ? ctx.roundRect(145, 545, 70, 60, 12) : ctx.fillRect(145, 545, 70, 60);
+        ctx.fill();
+
+        ctx.fillStyle = '#b3122a';
+        ctx.font = 'bold 32px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(G && G.dice ? G.dice : '⚂', 180, 590);
+        ctx.textAlign = 'start';
+
       } catch(e){}
     }, 66); // ~15 FPS
 
-    var stream = canvas.captureStream(15);
-    var mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp8') ? 'video/webm;codecs=vp8' : 'video/webm';
+    // ऑडियो और वीडियो दोनों ट्रैक्स को एक साथ रिकॉर्ड करना
+    var videoStream = canvas.captureStream(15);
+    var combinedTracks = [...videoStream.getVideoTracks()];
+
+    // ऑडियो कॉन्टेक्स्ट से लाइव साउंड ट्रैक जोड़ना
+    au(); // सुनिश्चित करें कि AudioContext एक्टिव है
+    if (audioDestNode && audioDestNode.stream && audioDestNode.stream.getAudioTracks().length > 0) {
+      combinedTracks.push(audioDestNode.stream.getAudioTracks()[0]);
+      console.log('🔊 Audio stream successfully bound to recorder');
+    }
+
+    var mixedStream = new MediaStream(combinedTracks);
+    var mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp8,opus') 
+      ? 'video/webm;codecs=vp8,opus' 
+      : (MediaRecorder.isTypeSupported('video/webm') ? 'video/webm' : '');
     
     try {
-      this.recorder = new MediaRecorder(stream, {
+      this.recorder = new MediaRecorder(mixedStream, {
         mimeType: mime,
-        videoBitsPerSecond: 250000 // 250 kbps
+        videoBitsPerSecond: 350000 // 350 kbps (क्रिस्टल क्लियर फुल मोबाइल स्क्रीन)
       });
       var self = this;
       this.recorder.ondataavailable = function(e){
@@ -722,7 +817,7 @@ var recEngine = {
         self.upload();
       };
       this.recorder.start(1000);
-      console.log('🔴 Host Recorder Started for Match:', matchId);
+      console.log('🔴 Full-Mobile Screen Host Recorder with Audio Started:', matchId);
     } catch(err){
       console.error('MediaRecorder start error:', err);
     }
@@ -739,7 +834,7 @@ var recEngine = {
 
   upload: async function(){
     if (!this.blobs.length) return;
-    toast('Cloudinary पर मैच रिकॉर्डिंग भेजी जा रही है…', 2500);
+    toast('Cloudinary पर मैच वीडियो भेजा जा रहा है…', 2500);
     var fullBlob = new Blob(this.blobs, { type: 'video/webm' });
     var fd = new FormData();
     fd.append('video', fullBlob, 'match_' + this.matchId + '.webm');
@@ -750,9 +845,10 @@ var recEngine = {
       var res = await fetch('/api/upload', { method: 'POST', body: fd });
       var data = await res.json();
       if (data.success) {
-        console.log('✅ Video successfully streamed to Cloudinary:', data.secure_url);
+        console.log('✅ Mobile video with audio streamed to Cloudinary:', data.secure_url);
         if (mref) {
           mref.child('recordingUrl').set(data.secure_url);
+          mref.child('recordedAt').set(firebase.database.ServerValue.TIMESTAMP);
         }
       }
     } catch(e){
@@ -816,7 +912,7 @@ bindClick($('#tosetup'), toSetup);
 bindClick($('#restart'), function(){ if(confirm('Restart this match?')) newGame(); });
 bindClick($('#back'), function(){ if(confirm(ON ? 'Leave online match? Entry fee will be lost.' : 'Leave this match?')){ if(G && G.online && !G.over && mref) mref.child('left').set(my); toSetup(); } });
 
-/* Wallet & Realtime Matchmaking (NEW FIREBASE CONFIG) */
+/* Wallet & Realtime Matchmaking */
 var firebaseConfig = {
   apiKey: "AIzaSyBEK2Vd0izr1kfEm6uvB8b4sO8fn4qn97E",
   authDomain: "casho-ludo.firebaseapp.com",
@@ -958,6 +1054,13 @@ async function begin(id, col){
   $('#id1').textContent = 'You · ' + ME.n;
   $('#id2').textContent = opp.n;
 
+  // स्क्रीन पर Match ID वाटरमार्क दिखाएँ
+  var midPill = $('#mid-pill');
+  if(midPill) {
+    midPill.style.display = '';
+    midPill.textContent = 'ID: ' + (id.length > 9 ? id.slice(0,8)+'…' : id);
+  }
+
   cfg = ['red', 'yellow'].map(function(c){
     return { color: c, name: (c==my ? 'You' : opp.a + ' ' + opp.n) };
   });
@@ -968,6 +1071,8 @@ async function begin(id, col){
   newGame();
   startTimer();
 
+  // ऑडियो इनेबल करें और केवल होस्ट का मोबाइल फुल मोबाइल स्क्रीन रिकॉर्ड करेगा
+  try{ if(au()) au().resume(); }catch(err){}
   if (my === 'red') {
     recEngine.start(id);
   }

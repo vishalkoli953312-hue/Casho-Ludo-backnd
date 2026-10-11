@@ -2,80 +2,89 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ludo Cash · Admin Live Video Dashboard</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ludo Cash · Super Admin & Live Command Center</title>
 <style>
-:root{--ink:#120738;--card:#1d114a;--accent:#ffd23f;--glow:#5b2bd6}
-*{box-sizing:border-box}
-body{margin:0;padding:16px;font-family:system-ui,-apple-system,sans-serif;background:#0d0626;color:#fff}
-.wrap{max-width:1050px;margin:0 auto}
-header{border-bottom:1px solid #2b1968;padding-bottom:12px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-h1{margin:0;font-size:22px;color:var(--accent)}
-p{color:#a99bde;font-size:12px;margin:3px 0 0}
+:root{--bg:#0b081e;--panel:#161036;--card:#21184e;--accent:#ffd23f;--red:#ff4757;--green:#2ed573;--blue:#1e90ff;--text:#f1f2f6;--muted:#a4b0be}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;min-height:100vh}
 
-/* दो कॉलम लेआउट: बाएँ मैच लिस्ट, दाएँ मोबाइल स्क्रीन प्लेयर */
-.main-grid{display:grid;grid-template-columns:360px 1fr;gap:20px}
-@media(max-width:820px){.main-grid{grid-template-columns:1fr}}
+/* Header */
+header{background:linear-gradient(135deg,#1f1352,#100930);padding:14px 20px;border-bottom:2px solid #2e1d70;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50}
+.logo{font-size:18px;font-weight:900;color:var(--accent);display:flex;align-items:center;gap:8px}
+.pulse{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.5s infinite}
+@keyframes blink{50%{opacity:0.3}}
 
-.panel{background:var(--card);border:2px solid #3c2a82;border-radius:18px;padding:16px}
-.panel h2{margin:0 0 12px;font-size:16px;color:#ffd23f;display:flex;align-items:center;justify-content:space-between}
+/* Layout */
+.layout{display:grid;grid-template-columns:340px 1fr;gap:16px;padding:16px;max-width:1400px;margin:auto}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
 
-/* मैच लिस्ट कार्ड्स */
-.match-list{max-height:560px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-right:4px}
-.match-item{background:#120738;border:1.5px solid #332070;border-radius:12px;padding:10px 12px;cursor:pointer;transition:all .2s;position:relative}
-.match-item:hover,.match-item.active{border-color:var(--accent);background:#251361;transform:translateY(-1px)}
-.match-item b{display:block;font-size:13px;color:#fff}
-.match-item small{color:#a892ff;font-size:11px}
-.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:900;margin-top:4px}
-.badge.ready{background:#12a63a;color:#fff}
-.badge.wait{background:#555;color:#ccc}
+/* Match Sidebar List */
+.sidebar{background:var(--panel);border-radius:20px;border:1px solid #2e1d70;padding:16px;height:calc(100vh - 100px);overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+.tab-pills{display:flex;gap:8px;background:var(--bg);padding:4px;border-radius:12px}
+.pill{flex:1;border:0;background:transparent;color:var(--muted);font-weight:800;font-size:12px;padding:8px;border-radius:10px;cursor:pointer}
+.pill.active{background:var(--card);color:var(--accent)}
 
-/* 9:16 रियल मोबाइल स्क्रीन जैसा वीडियो फ्रेम */
-.mobile-frame-wrapper{display:flex;flex-direction:column;align-items:center}
-.mobile-phone{width:310px;height:550px;background:#000;border:10px solid #2b1968;border-radius:36px;box-shadow:0 12px 30px rgba(0,0,0,0.8);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center}
-video{width:100%;height:100%;object-fit:cover;background:#000}
-.no-video{text-align:center;color:#6b5aa6;padding:20px;font-size:13px;font-weight:700}
+.match-item{background:var(--card);border:2px solid transparent;border-radius:14px;padding:12px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;gap:6px}
+.match-item:hover,.match-item.active{border-color:var(--accent);transform:translateY(-2px)}
+.m-head{display:flex;justify-content:space-between;align-items:center;font-size:11px}
+.badge{padding:2px 8px;border-radius:8px;font-weight:900;font-size:10px}
+.badge.live{background:rgba(46,213,115,0.2);color:var(--green);border:1px solid var(--green)}
+.badge.fin{background:rgba(164,176,190,0.2);color:var(--muted)}
+.m-vs{font-weight:900;font-size:14px;display:flex;align-items:center;gap:6px}
 
-.btn-del{background:linear-gradient(#ff4757,#b3122a);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-weight:900;font-size:12px;cursor:pointer;margin-top:14px;width:100%}
-.btn-del:active{transform:scale(0.98)}
+/* Main Display */
+.main-view{display:flex;flex-direction:column;gap:16px}
+.no-sel{display:grid;place-items:center;height:350px;background:var(--panel);border-radius:20px;border:1px dashed #3a268a;color:var(--muted);font-weight:700}
+
+/* Live Match View */
+.view-grid{display:grid;grid-template-columns:360px 1fr;gap:16px}
+@media(max-width:800px){.view-grid{grid-template-columns:1fr}}
+
+.board-card{background:var(--panel);border-radius:20px;padding:16px;border:1px solid #2e1d70;display:flex;flex-direction:column;align-items:center;gap:12px}
+.board-preview{width:320px;height:320px;background:#fff;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,0.5);overflow:hidden;position:relative}
+
+/* Action Logs Box */
+.log-card{background:var(--panel);border-radius:20px;padding:16px;border:1px solid #2e1d70;display:flex;flex-direction:column;gap:10px;height:100%}
+.log-box{flex:1;background:var(--bg);border-radius:14px;padding:12px;overflow-y:auto;max-height:360px;font-family:monospace;font-size:12px;display:flex;flex-direction:column;gap:6px}
+.log-row{padding:6px 10px;border-radius:8px;background:var(--card);display:flex;justify-content:space-between;align-items:center}
+.log-row.cut{background:rgba(255,71,87,0.2);border-left:3px solid var(--red)}
+.log-row.six{background:rgba(255,210,63,0.15);border-left:3px solid var(--accent)}
+
+/* Manage & Video Card */
+.admin-card{background:var(--panel);border-radius:20px;padding:16px;border:1px solid #2e1d70;display:flex;flex-direction:column;gap:14px}
+.act-btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:0;border-radius:12px;padding:10px 16px;font-weight:900;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn.danger{background:var(--red);color:#fff}
+.btn.warning{background:var(--accent);color:#331b00}
+.btn:hover{filter:brightness(1.1)}
+
+video{width:100%;max-height:320px;border-radius:14px;background:#000;border:2px solid #2e1d70}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div>
-      <h1>📱 Ludo Cash · Live & Auto Match Inspector</h1>
-      <p>Direct match videos with full mobile screen view & sound recording</p>
-    </div>
-  </header>
 
-  <div class="main-grid">
-    <!-- बाएँ: हालिया मैचों की ऑटो-लिस्ट -->
-    <div class="panel">
-      <h2>Recent Matches <button onclick="loadMatches()" style="background:#ffd23f;border:0;border-radius:8px;padding:3px 8px;font-size:11px;font-weight:900;cursor:pointer">🔄 Refresh</button></h2>
-      <div id="mlist" class="match-list">
-        <div style="text-align:center;color:#8a7cb8;padding:20px;font-size:12px">मैच लोड हो रहे हैं…</div>
-      </div>
-    </div>
+<header>
+  <div class="logo"><span class="pulse"></span> 🎮 LUDO LIVE AUDIT & CONTROL</div>
+  <div id="stats" style="font-size:12px;font-weight:800;color:var(--muted)">Connecting…</div>
+</header>
 
-    <!-- दाएँ: 9:16 पोर्ट्रेट मोबाइल स्क्रीन वीडियो प्लेयर -->
-    <div class="panel mobile-frame-wrapper">
-      <div class="mobile-phone">
-        <video id="vplayer" controls playsinline></video>
-        <div id="phint" class="no-video">← बायीं लिस्ट से कोई भी मैच चुनें<br><small style="color:#8873c4">वीडियो मोबाइल स्क्रीन और साउंड के साथ चलेगा</small></div>
-      </div>
-
-      <div style="width:310px;margin-top:12px;font-size:12px">
-        <div style="display:flex;justify-content:space-between;color:#a99bde">
-          <span>Match: <b id="cur_id" style="color:#fff">-</b></span>
-          <span>Status: <b id="cur_status" style="color:#ffd23f">-</b></span>
-        </div>
-        <button id="delbtn" class="btn-del" style="display:none" onclick="deleteVideo()">🗑 Delete Video from Cloudinary</button>
-      </div>
+<div class="layout">
+  <!-- Side Matches List -->
+  <aside class="sidebar">
+    <div class="tab-pills">
+      <button class="pill active" id="tab-all" onclick="filterTab('all')">All Matches</button>
+      <button class="pill" id="tab-live" onclick="filterTab('live')">🔴 Live Only</button>
     </div>
-  </div>
+    <div id="m-list" style="display:flex;flex-direction:column;gap:10px">Loading matches…</div>
+  </aside>
+
+  <!-- Main Inspect Area -->
+  <main class="main-view" id="main-panel">
+    <div class="no-sel">👈 बाएँ मेनू से कोई भी मैच चुनें ताकि आप उसका लाइव डेटा या वीडियो देख सकें</div>
+  </main>
 </div>
 
 <script>
@@ -90,116 +99,187 @@ var firebaseConfig = {
   measurementId: "G-FGY3ZM5K8Q"
 };
 
-var db;
-try {
-  firebase.initializeApp(firebaseConfig);
-  db = firebase.database();
-} catch(e){}
+firebase.initializeApp(firebaseConfig);
+var db = firebase.database();
 
-var activePublicId = null;
+var matchesData = {};
+var curMatchId = null;
+var tabFilter = 'all';
 
-// पेज लोड होते ही Firebase से हाल के सारे मैच खुद लोड हो जाएँगे
-function loadMatches(){
-  if(!db) return;
-  var listEl = document.getElementById('mlist');
-  listEl.innerHTML = '<div style="text-align:center;color:#8a7cb8;padding:20px;font-size:12px">मैच खोज रहे हैं…</div>';
+// Real-time Match List Listener
+db.ref('matches').on('value', function(snapshot){
+  matchesData = snapshot.val() || {};
+  renderMatchList();
+  updateStats();
+  if(curMatchId && matchesData[curMatchId]){
+    inspectMatch(curMatchId, false);
+  }
+});
 
-  db.ref('matches').limitToLast(15).once('value', function(snapshot){
-    var data = snapshot.val();
-    if(!data){
-      listEl.innerHTML = '<div style="text-align:center;color:#8a7cb8;padding:20px;font-size:12px">कोई मैच नहीं मिला</div>';
-      return;
-    }
-
-    var html = '';
-    var keys = Object.keys(data).reverse(); // सबसे नया मैच सबसे ऊपर
-
-    keys.forEach(function(k){
-      var m = data[k];
-      var p1 = m.n1 || 'Player 1';
-      var p2 = m.n2 || 'Player 2';
-      var hasVid = !!m.recordingUrl;
-
-      html += '<div class="match-item" onclick="playMatch(\''+k+'\',\''+(m.recordingUrl||'')+'\')">' +
-                '<b>' + p1 + ' vs ' + p2 + '</b>' +
-                '<small>ID: ' + k + '</small><br>' +
-                (hasVid ? '<span class="badge ready">📹 Video Available</span>' : '<span class="badge wait">⏳ In Progress / No Video</span>') +
-              '</div>';
-    });
-
-    listEl.innerHTML = html;
-  });
+function updateStats(){
+  var total = Object.keys(matchesData).length;
+  var live = Object.values(matchesData).filter(function(m){ return !m.finished && !m.recordingUrl; }).length;
+  document.getElementById('stats').innerHTML = 'Total: <b>'+total+'</b> | Live: <b style="color:var(--green)">'+live+'</b>';
 }
 
-// किसी भी मैच पर क्लिक करते ही 1 सेकंड में वीडियो चलेगा
-async function playMatch(id, recUrl){
-  document.getElementById('cur_id').textContent = id.slice(0, 10) + '..';
-  document.getElementById('cur_status').textContent = 'Loading…';
-  activePublicId = 'ludo_matches/match_' + id;
+function filterTab(t){
+  tabFilter = t;
+  document.getElementById('tab-all').classList.toggle('active', t==='all');
+  document.getElementById('tab-live').classList.toggle('active', t==='live');
+  renderMatchList();
+}
 
-  var vp = document.getElementById('vplayer');
-  var hint = document.getElementById('phint');
-  var del = document.getElementById('delbtn');
+function renderMatchList(){
+  var container = document.getElementById('m-list');
+  var keys = Object.keys(matchesData).reverse();
 
-  // अगर Firebase में डायरेक्ट लिंक है:
-  if(recUrl){
-    vp.src = recUrl;
-    vp.style.display = 'block';
-    hint.style.display = 'none';
-    del.style.display = 'block';
-    document.getElementById('cur_status').textContent = 'Playing';
-    vp.play();
+  if(!keys.length){
+    container.innerHTML = '<div style="text-align:center;color:var(--muted);font-size:13px;padding:20px">कोई मैच नहीं मिला</div>';
     return;
   }
 
-  // नहीं तो Cloudinary API से ढूँढें:
-  try {
-    var res = await fetch('/api/match?matchId=' + encodeURIComponent(id));
-    var json = await res.json();
-    if(json.success && json.data && json.data.url){
-      vp.src = json.data.url;
-      vp.style.display = 'block';
-      hint.style.display = 'none';
-      del.style.display = 'block';
-      document.getElementById('cur_status').textContent = 'Playing';
-      vp.play();
-    } else {
-      vp.style.display = 'none';
-      hint.style.display = 'block';
-      hint.innerHTML = '⚠️ इस मैच का वीडियो अभी प्रोसेस हो रहा है या उपलब्ध नहीं है।';
-      del.style.display = 'none';
-      document.getElementById('cur_status').textContent = 'No Video';
-    }
-  }catch(e){
-    vp.style.display = 'none';
-    hint.style.display = 'block';
-    hint.textContent = 'लोड करने में विफल';
-  }
+  var html = '';
+  keys.forEach(function(k){
+    var m = matchesData[k];
+    var isLive = !m.finished && !m.recordingUrl && (Date.now() - (m.start||0) < 600000);
+    if(tabFilter === 'live' && !isLive) return;
+
+    var activeCls = (curMatchId === k) ? 'active' : '';
+    html += '<div class="match-item '+activeCls+'" onclick="inspectMatch(\''+k+'\', true)">';
+    html += '<div class="m-head"><span style="color:var(--muted)">ID: '+k.slice(-8)+'</span><span class="badge '+(isLive?'live':'fin')+'">'+(isLive?'🔴 LIVE':'FINISHED')+'</span></div>';
+    html += '<div class="m-vs"><span>'+(m.a1||'🦊')+' '+(m.n1||'P1')+'</span><span style="color:var(--accent);font-size:11px">VS</span><span>'+(m.a2||'🐯')+' '+(m.n2||'P2')+'</span></div>';
+    html += '<div style="font-size:11px;color:var(--muted)">'+new Date(m.start||Date.now()).toLocaleTimeString()+'</div>';
+    html += '</div>';
+  });
+
+  container.innerHTML = html;
 }
 
-async function deleteVideo(){
-  if(!activePublicId) return;
-  if(!confirm('क्या आप इस मैच का वीडियो Cloudinary से हमेशा के लिए डिलीट करना चाहते हैं?')) return;
+// Inspect a Match
+function inspectMatch(mid, forceReset){
+  curMatchId = mid;
+  renderMatchList();
+  var m = matchesData[mid];
+  if(!m) return;
 
+  var panel = document.getElementById('main-panel');
+  var isLive = !m.finished && !m.recordingUrl;
+
+  var html = `
+  <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel);padding:14px 20px;border-radius:18px;border:1px solid #2e1d70">
+    <div>
+      <div style="font-size:12px;color:var(--accent);font-weight:900">MATCH ID: ${mid}</div>
+      <div style="font-size:18px;font-weight:900">${m.a1||'🦊'} ${m.n1||'Player 1'} (Red) VS ${m.a2||'🐯'} ${m.n2||'Player 2'} (Yellow)</div>
+    </div>
+    <span class="badge ${isLive?'live':'fin'}">${isLive ? '🔴 LIVE REALTIME' : 'COMPLETED'}</span>
+  </div>
+
+  <div class="view-grid">
+    <!-- Live Board / Video Replay -->
+    <div class="board-card">
+      <h3 style="margin:0;font-size:14px;color:var(--accent)">
+        ${m.recordingUrl ? '🎬 MATCH VIDEO RECORDING (Cloudinary)' : '📡 LIVE BOARD MIRROR'}
+      </h3>
+      
+      ${m.recordingUrl ? `
+        <video src="${m.recordingUrl}" controls autoplay playsinline></video>
+        <button class="btn danger" onclick="deleteVideo('${mid}')" style="width:100%">🗑 Cloudinary से वीडियो डिलीट करें</button>
+      ` : `
+        <div class="board-preview">
+          <iframe src="/?spectate=${mid}" style="width:100%;height:100%;border:0;pointer-events:none"></iframe>
+        </div>
+        <div style="font-size:12px;color:var(--muted);text-align:center">
+          ⚡ 0-Delay Live Sync: खिलाड़ी जो पासा फेंक रहे हैं, आपको यहाँ रियल-टाइम दिख रहा है।
+        </div>
+      `}
+    </div>
+
+    <!-- Live Turn-By-Turn Logs (किसने क्या किया) -->
+    <div class="log-card">
+      <h3 style="margin:0;font-size:14px;color:var(--accent);display:flex;justify-content:space-between">
+        <span>📜 LIVE MOVE & DICE AUDIT LOG</span>
+        <span id="log-count">0 Actions</span>
+      </h3>
+      <div class="log-box" id="match-logs">
+        <div style="color:var(--muted)">डेटा लोड हो रहा है…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Management Controls -->
+  <div class="admin-card">
+    <h3 style="margin:0;font-size:14px;color:var(--accent)">🛡️ ADMIN MATCH MANAGEMENT</h3>
+    <div class="act-btns">
+      <button class="btn warning" onclick="forceEndMatch('${mid}')">⛔ Force End Match (मैच तुरंत खत्म करें)</button>
+      <button class="btn danger" onclick="deleteMatchFirebase('${mid}')">❌ Firebase से मैच रिकॉर्ड मिटाएँ</button>
+    </div>
+  </div>
+  `;
+
+  panel.innerHTML = html;
+  loadLogs(mid);
+}
+
+// Load Live Move/Dice Logs
+function loadLogs(mid){
+  db.ref('matches/' + mid + '/logs').on('value', function(snap){
+    var box = document.getElementById('match-logs');
+    if(!box) return;
+    var logs = snap.val();
+    if(!logs){
+      box.innerHTML = '<div style="color:var(--muted);padding:10px">अभी कोई चाल नहीं चली गई है।</div>';
+      return;
+    }
+
+    var logArr = Object.values(logs).reverse();
+    document.getElementById('log-count').textContent = logArr.length + ' Actions';
+    var out = '';
+    logArr.forEach(function(l){
+      var isCut = l.msg && l.msg.includes('काट');
+      var isSix = l.dice === 6;
+      var cls = isCut ? 'cut' : (isSix ? 'six' : '');
+      out += '<div class="log-row '+cls+'">';
+      out += '<span>'+l.msg+'</span>';
+      out += '<span style="color:var(--muted);font-size:10px">'+new Date(l.t||Date.now()).toLocaleTimeString()+'</span>';
+      out += '</div>';
+    });
+    box.innerHTML = out;
+  });
+}
+
+// Admin Force Stop Match
+function forceEndMatch(mid){
+  if(!confirm('क्या आप इस मैच को एडमिन के तौर पर जबरन रोकना चाहते हैं?')) return;
+  db.ref('matches/' + mid + '/finished').set(true);
+  db.ref('matches/' + mid + '/left').set('admin_forced');
+  alert('मैच समाप्त कर दिया गया।');
+}
+
+// Delete Match Data from Firebase
+function deleteMatchFirebase(mid){
+  if(!confirm('क्या आप वाकई इस मैच को Firebase डेटाबेस से हटाना चाहते हैं?')) return;
+  db.ref('matches/' + mid).remove();
+  curMatchId = null;
+  document.getElementById('main-panel').innerHTML = '<div class="no-sel">मैच हटा दिया गया है।</div>';
+}
+
+// Delete Video from Cloudinary
+async function deleteVideo(mid){
+  if(!confirm('क्या आप इस मैच का वीडियो Cloudinary से हमेशा के लिए डिलीट करना चाहते हैं?')) return;
   try {
-    var res = await fetch('/api/match?publicId=' + encodeURIComponent(activePublicId), { method: 'DELETE' });
+    var res = await fetch('/api/match?publicId=match_' + encodeURIComponent(mid), { method: 'DELETE' });
     var json = await res.json();
     if(json.success){
+      db.ref('matches/' + mid + '/recordingUrl').remove();
       alert('वीडियो Cloudinary से हटा दिया गया!');
-      document.getElementById('vplayer').src = '';
-      document.getElementById('vplayer').style.display = 'none';
-      document.getElementById('phint').style.display = 'block';
-      document.getElementById('phint').textContent = 'वीडियो हटा दिया गया';
-      document.getElementById('delbtn').style.display = 'none';
-      loadMatches();
+      inspectMatch(mid, true);
+    } else {
+      alert('हटाने में त्रुटि: ' + (json.error || 'अज्ञात कारण'));
     }
-  }catch(e){
-    alert('त्रुटि: ' + e.message);
+  } catch(e){
+    alert('सर्वर अनुरोध विफल: ' + e.message);
   }
 }
-
-// पेज खुलते ही लिस्ट लोड करें
-window.onload = loadMatches;
 </script>
 </body>
 </html>

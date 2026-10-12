@@ -6,88 +6,93 @@
 <title>Ludo 3D Arena</title>
 <style>
 :root{
-  --c-red:#ff3b56;--d-red:#b80e28;
-  --c-green:#10b981;--d-green:#047857;
-  --c-yellow:#fbbf24;--d-yellow:#b45309;
-  --c-blue:#3b82f6;--d-blue:#1d4ed8;
-  --bg-deep:#11092e;--bg-card:#1e144a;
-  --gold:#fcd34d;--ink:#1a0f3d;
+  --red:#ff3b56;--d-red:#9e0920;
+  --green:#10b981;--d-green:#047857;
+  --yellow:#fbbf24;--d-yellow:#b45309;
+  --blue:#3b82f6;--d-blue:#1d4ed8;
+  --gold:#fcd34d;--ink:#170938;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:#fff;background:radial-gradient(circle at 50% 20%,#3b1c8c,#180b42 60%,#09031c)}
+html,body{width:100%;height:100%;overflow:hidden;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:#fff;background:radial-gradient(circle at 50% 10%,#3e1c8f,#170a40 60%,#09031d)}
 
 /* Screens */
-.screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:70px 14px 14px;box-sizing:border-box;overflow-y:auto;z-index:5}
-body[data-s="menu"] #menu,body[data-s="setup"] #setup,body[data-s="search"] #search,body[data-s="game"] #game{display:flex!important}
-.screen>*{width:100%;max-width:460px;margin-left:auto;margin-right:auto}
+.screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:66px 12px 12px;box-sizing:border-box;overflow-y:auto;z-index:5}
+body[data-s="menu"] #menu,body[data-s="search"] #search,body[data-s="game"] #game{display:flex!important}
+.screen>*{width:100%;max-width:480px;margin-left:auto;margin-right:auto}
 
-/* Cartoon Headers & Cards */
-.logo-title{font-size:46px;font-weight:900;text-align:center;color:#fff;letter-spacing:1px;text-shadow:0 5px 0 #b80e28,0 10px 0 #540310,0 18px 25px rgba(0,0,0,0.7);transform:perspective(500px) rotateX(8deg);margin-bottom:6px}
-.sub-title{text-align:center;font-size:14px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;text-shadow:0 2px 4px rgba(0,0,0,0.6)}
+/* Cartoon UI Elements */
+.logo-title{font-size:42px;font-weight:900;text-align:center;color:#fff;letter-spacing:1px;text-shadow:0 4px 0 #b45309,0 8px 0 #451a03,0 16px 20px rgba(0,0,0,0.7);margin-bottom:4px}
+.sub-title{text-align:center;font-size:13px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px}
 
-.c-card{background:linear-gradient(180deg,#ffffff,#ebe4ff);color:var(--ink);border-radius:26px;padding:18px;box-shadow:0 10px 0 #3b2580,0 20px 30px rgba(0,0,0,0.5);border:4px solid #fff;margin-bottom:14px}
-.c-card h3{font-size:18px;font-weight:900;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.card-3d{background:linear-gradient(180deg,#ffffff,#ede6ff);color:var(--ink);border-radius:24px;padding:18px;box-shadow:0 8px 0 #3a1e78,0 18px 25px rgba(0,0,0,0.5);border:3px solid #fff;margin-bottom:14px}
+.btn-3d{border:0;border-radius:18px;padding:14px 20px;font:900 17px inherit;color:#fff;background:linear-gradient(180deg,#ffd043,#f59e0b);box-shadow:0 6px 0 #b45309,0 12px 18px rgba(0,0,0,0.4);text-shadow:0 2px 0 #92400e;cursor:pointer;outline:none;display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
+.btn-3d:active{transform:translateY(3px);box-shadow:0 3px 0 #b45309}
+.btn-3d.green{background:linear-gradient(180deg,#34d399,#059669);box-shadow:0 6px 0 #047857;text-shadow:0 2px 0 #064e3b}
+.btn-3d.sm{padding:8px 14px;font-size:12px;border-radius:12px;box-shadow:0 4px 0 #b45309;width:auto}
 
-/* Cartoon 3D Buttons */
-.btn-3d{border:0;border-radius:20px;padding:14px 22px;font:900 18px inherit;color:#fff;background:linear-gradient(180deg,#ffd043,#f59e0b);box-shadow:0 7px 0 #b45309,0 14px 22px rgba(0,0,0,0.45);text-shadow:0 2px 0 #92400e;cursor:pointer;position:relative;outline:none;display:flex;align-items:center;justify-content:center;gap:10px;width:100%}
-.btn-3d:active{transform:translateY(4px);box-shadow:0 3px 0 #b45309}
-.btn-3d.green{background:linear-gradient(180deg,#34d399,#059669);box-shadow:0 7px 0 #047857;text-shadow:0 2px 0 #064e3b}
-.btn-3d.green:active{box-shadow:0 3px 0 #047857}
-.btn-3d.sm{padding:8px 14px;font-size:13px;border-radius:14px;box-shadow:0 4px 0 #b45309;width:auto}
+/* Top App Bar */
+#hdr{position:fixed;top:0;left:0;right:0;height:56px;z-index:25;background:linear-gradient(180deg,#2b156b,#160a3d);border-bottom:3px solid #48239e;display:flex;justify-content:space-between;align-items:center;padding:0 16px}
+.brand-badge{font-size:20px;font-weight:900;display:flex;align-items:center;gap:8px}
+.wallet-box{background:linear-gradient(180deg,#fef08a,#f59e0b);border:2px solid #fff;border-radius:16px;padding:4px 10px;color:#78350f;font-weight:900;font-size:13px;display:flex;align-items:center;gap:6px}
 
-/* Top App Header */
-#hdr{position:fixed;top:0;left:0;right:0;height:60px;z-index:25;background:linear-gradient(180deg,#2e166e,#1a0b47);border-bottom:3px solid #4a299c;display:flex;justify-content:space-between;align-items:center;padding:0 16px;box-shadow:0 6px 14px rgba(0,0,0,0.5)}
-.brand-badge{font-size:22px;font-weight:900;color:#fff;display:flex;align-items:center;gap:8px;letter-spacing:1px}
-.wallet-box{background:linear-gradient(180deg,#fef08a,#f59e0b);border:3px solid #fff;border-radius:18px;padding:4px 12px;color:#78350f;font-weight:900;font-size:14px;display:flex;align-items:center;gap:6px;box-shadow:0 4px 0 #b45309}
+/* Game Arena Layout */
+#game{justify-content:center;padding-top:60px}
+.arena-wrap{width:min(94vw,56vh,460px);margin:0 auto;display:flex;flex-direction:column;gap:6px}
 
-/* 3D Board Arena */
-#bw{aspect-ratio:1;width:min(92vw,54vh,450px);height:min(92vw,54vh,450px);margin:0 auto;border-radius:28px;padding:8px;background:linear-gradient(145deg,#ffffff,#dcd0ff);box-shadow:0 14px 0 #3a1b7a,0 25px 40px rgba(0,0,0,0.7);position:relative}
-#svg{width:100%;height:100%;display:block;border-radius:20px}
+/* Player Stations (4 Corners) */
+.station-row{display:flex;justify-content:space-between;align-items:center;width:100%}
+.p-station{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.12);border:2px solid rgba(255,255,255,0.22);padding:4px 8px;border-radius:18px;backdrop-filter:blur(8px);min-width:130px}
+.p-station.rev{flex-direction:row-reverse;text-align:right}
+.p-station.active-turn{border-color:var(--gold);background:rgba(255,255,255,0.28);box-shadow:0 0 14px var(--gold)}
+.p-avatar{width:32px;height:32px;border-radius:50%;border:2px solid #fff;display:grid;place-items:center;font-weight:900;font-size:12px;color:#fff;flex:none}
+.p-meta{display:flex;flex-direction:column;gap:1px}
+.p-name{font-size:12px;font-weight:900;max-width:65px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.p-score{font-size:10px;font-weight:800;color:var(--gold)}
 
-/* Panels */
-#game>.prow,#game>#top,#game>#say{width:min(92vw,54vh,450px);margin:0 auto}
-.prow{display:flex;gap:10px;margin:4px 0}
-.pp{flex:1;background:rgba(255,255,255,0.18);border:2px solid rgba(255,255,255,0.25);border-radius:18px;padding:6px 10px;display:flex;align-items:center;gap:8px;font-weight:800;font-size:12px;backdrop-filter:blur(8px)}
-.pp.turn{border-color:var(--gold);background:rgba(255,255,255,0.35);box-shadow:0 0 16px var(--gold)}
-.pp-badge{width:16px;height:16px;border-radius:50%;border:2px solid #fff;display:inline-block;flex:none}
-
-/* 3D Realistic Physics Dice */
-.dice-stage{width:56px;height:56px;perspective:600px;margin:0 auto;position:relative}
-#cube{width:100%;height:100%;position:absolute;transform-style:preserve-3d;transform:rotateX(0deg) rotateY(0deg);transition:transform 0.6s cubic-bezier(0.18,0.89,0.32,1.28)}
-#cube.rolling{animation:dicePhysics 0.65s cubic-bezier(0.25,1,0.5,1) forwards}
-@keyframes dicePhysics{
-  0%{transform:translateY(0) scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg)}
-  40%{transform:translateY(-48px) scale(1.22) rotateX(450deg) rotateY(270deg) rotateZ(90deg)}
-  80%{transform:translateY(4px) scale(0.92) rotateX(720deg) rotateY(720deg)}
+/* Corner Dedicated 3D Dice */
+.corner-dice-cradle{width:42px;height:42px;perspective:400px;position:relative;flex:none;cursor:pointer}
+.cube-box{width:100%;height:100%;position:absolute;transform-style:preserve-3d;transform:rotateX(0deg) rotateY(0deg);transition:transform 0.55s cubic-bezier(0.18,0.89,0.32,1.25)}
+.cube-box.rolling{animation:diceTumble 0.6s cubic-bezier(0.25,1,0.5,1) forwards}
+@keyframes diceTumble{
+  0%{transform:translateY(0) scale(1) rotateX(0deg) rotateY(0deg)}
+  40%{transform:translateY(-36px) scale(1.22) rotateX(450deg) rotateY(270deg)}
+  80%{transform:translateY(3px) scale(0.92) rotateX(720deg) rotateY(720deg)}
   100%{transform:translateY(0) scale(1)}
 }
-.face{position:absolute;inset:0;background:linear-gradient(145deg,#ffffff,#e2d9f3);border:3px solid #bba8de;border-radius:14px;box-shadow:inset 0 0 6px rgba(0,0,0,0.15);display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:6px}
-.pip{width:9px;height:9px;background:#23134d;border-radius:50%;margin:auto;box-shadow:inset 0 1px 2px rgba(0,0,0,0.5);display:none}
+.d-face{position:absolute;inset:0;background:linear-gradient(145deg,#ffffff,#dfd6f3);border:2.5px solid #ab97d4;border-radius:10px;display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:4px}
+.pip{width:7px;height:7px;background:#1e0c47;border-radius:50%;margin:auto;display:none}
 .pip.on{display:block}
-.pip.red{background:var(--c-red)}
+.pip.red{background:var(--red)}
+
+.pulse-ring{position:absolute;inset:-4px;border-radius:14px;border:2px solid var(--gold);opacity:0;pointer-events:none}
+.p-station.active-turn .pulse-ring{opacity:1;animation:diceAura 0.8s infinite alternate}
+@keyframes diceAura{to{transform:scale(1.15);opacity:0.3}}
+
+/* 3D Board Canvas */
+#bw{aspect-ratio:1;width:100%;border-radius:24px;padding:6px;background:linear-gradient(145deg,#ffffff,#ded3ff);box-shadow:0 12px 0 #331770,0 20px 30px rgba(0,0,0,0.6);position:relative}
+#svg{width:100%;height:100%;display:block;border-radius:18px}
 
 /* 3D Tokens Styling & Gravity Bounce */
 .tok{cursor:pointer}
-.tok .shadow{fill:rgba(18,7,45,0.45);transition:all 0.15s ease}
-.tok.active-turn .in-body{animation:tokenFloat 0.6s ease-in-out infinite alternate}
-@keyframes tokenFloat{
+.tok .shadow{fill:rgba(18,7,45,0.4);transition:all 0.15s ease}
+.tok.active-turn .in-body{animation:tokenHopIdle 0.55s ease-in-out infinite alternate}
+@keyframes tokenHopIdle{
   0%{transform:translateY(0) scale(1)}
-  100%{transform:translateY(-14px) scale(1.15)}
+  100%{transform:translateY(-12px) scale(1.14)}
 }
-.tok.moving .in-body{animation:stepHop 0.16s cubic-bezier(0.28,0.84,0.42,1) infinite alternate}
-@keyframes stepHop{
+.tok.moving .in-body{animation:stepPhysics 0.15s cubic-bezier(0.28,0.84,0.42,1) infinite alternate}
+@keyframes stepPhysics{
   0%{transform:translateY(0)}
-  100%{transform:translateY(-18px) scale(1.12)}
+  100%{transform:translateY(-16px) scale(1.12)}
 }
 
-/* Toast & Modals */
-#toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1f1147;color:#fff;padding:14px 26px;border-radius:22px;border:3px solid var(--gold);font-weight:900;font-size:15px;box-shadow:0 12px 35px rgba(0,0,0,0.8);display:none;z-index:99999}
-#toast.on{display:flex;align-items:center;gap:10px}
+/* Modals & Clean Vectors */
+#toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1f1047;color:#fff;padding:12px 24px;border-radius:18px;border:2px solid var(--gold);font-weight:900;font-size:14px;box-shadow:0 10px 30px rgba(0,0,0,0.8);display:none;z-index:99999}
+#toast.on{display:block}
 #modal{position:fixed;inset:0;background:rgba(0,0,0,0.82);display:none;align-items:center;justify-content:center;z-index:99999;padding:16px}
 #modal.on{display:flex}
 
-/* Clean SVG Icon Utility */
-.icon{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;display:inline-block;vertical-align:middle}
+.icon{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;display:inline-block;vertical-align:middle}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
@@ -96,110 +101,165 @@ body[data-s="menu"] #menu,body[data-s="setup"] #setup,body[data-s="search"] #sea
 
 <header id="hdr">
   <div class="brand-badge">
-    <svg class="icon" style="color:var(--gold)" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+    <svg class="icon" style="color:var(--gold)" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="16" cy="16" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
     <span>LUDO 3D</span>
   </div>
   <div class="wallet-box">
     <svg class="icon" style="color:#b45309" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M15 9.5a3.5 3.5 0 0 0-7 0c0 4 7 2 7 6a3.5 3.5 0 0 1-7 0"/></svg>
-    <span id="wal">₹150</span>
+    <span id="wal">150</span>
   </div>
 </header>
 
 <!-- Main Menu -->
 <section id="menu" class="screen">
   <div class="logo-title">LUDO ARENA</div>
-  <div class="sub-title">3D BATTLE ARENA</div>
+  <div class="sub-title">CORNER 3D BATTLEGROUND</div>
 
-  <div class="c-card">
-    <h3>
-      <svg class="icon" style="color:#059669" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      Online Matchmaking
-    </h3>
-    <p style="font-size:13px;font-weight:700;color:#61529e;margin-bottom:14px">Real Player vs Real Player (Cloud Recorded)</p>
-    <button class="btn-3d green" id="btnOnline">
-      <span>Play Online Battle</span>
-    </button>
+  <div class="card-3d">
+    <h3 style="margin-bottom:8px">Online Matchmaking</h3>
+    <p style="font-size:13px;font-weight:700;color:#61529e;margin-bottom:14px">Play 1v1 PvP against real online players with Cloud Video Recording.</p>
+    <button class="btn-3d green" id="btnOnline">Play Online Battle</button>
   </div>
 
-  <div class="c-card">
-    <h3>
-      <svg class="icon" style="color:#7c3aed" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="9" cy="9" r="2" fill="currentColor"/><circle cx="15" cy="9" r="2" fill="currentColor"/><path d="M8 15h8"/></svg>
-      Vs Robot (Offline AI)
-    </h3>
-    <p style="font-size:13px;font-weight:700;color:#61529e;margin-bottom:14px">Play against Smart Robot AI with Full Audit Recording</p>
-    <button class="btn-3d" id="btnRobot">
-      <span>Play vs Robot</span>
-    </button>
+  <div class="card-3d">
+    <h3 style="margin-bottom:8px">Vs Robot (Smart AI)</h3>
+    <p style="font-size:13px;font-weight:700;color:#61529e;margin-bottom:14px">Play against Smart Robot AI with dedicated dice and full telemetry logs.</p>
+    <button class="btn-3d" id="btnRobot">Play vs Robot</button>
   </div>
 </section>
 
-<!-- Searching -->
+<!-- Searching Screen -->
 <section id="search" class="screen">
-  <div class="c-card" style="text-align:center;padding:34px 20px">
-    <div style="width:54px;height:54px;border:5px solid #d9ceff;border-top-color:#f59e0b;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px"></div>
-    <h3 style="justify-content:center">Searching Opponent</h3>
-    <p style="font-size:13px;font-weight:700;color:#61529e;margin-bottom:20px">Matching with an active player in network…</p>
+  <div class="card-3d" style="text-align:center;padding:32px 18px">
+    <div style="width:48px;height:48px;border:4px solid #d9ceff;border-top-color:#f59e0b;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 14px"></div>
+    <h3>Searching Opponent</h3>
+    <p style="font-size:13px;font-weight:700;color:#61529e;margin-bottom:18px">Connecting to an online opponent...</p>
     <button class="btn-3d sm" id="btnCancelSearch" style="margin:0 auto">Cancel</button>
   </div>
 </section>
 
-<!-- Game Arena -->
+<!-- Main Game Arena -->
 <section id="game" class="screen">
-  <div id="top" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-    <div style="display:flex;align-items:center;gap:6px;background:rgba(0,0,0,0.4);border:2px solid #5833b5;padding:4px 10px;border-radius:16px;font-size:11px;font-weight:800">
-      <span id="midBadge" style="color:var(--gold);cursor:pointer">MATCH ID</span>
+  <div class="arena-wrap">
+    <!-- Top Bar Controls -->
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div id="midBadge" style="background:rgba(0,0,0,0.4);border:1.5px solid #5833b5;padding:4px 10px;border-radius:14px;font-size:11px;font-weight:800;color:var(--gold);cursor:pointer">
+        ID: MATCH
+      </div>
+      <div id="tmr" style="font-weight:900;background:rgba(0,0,0,0.4);padding:4px 10px;border-radius:12px;font-size:12px">08:00</div>
+      <button class="btn-3d sm" id="btnQuit">Quit</button>
     </div>
-    <div id="tmr" style="font-weight:900;background:rgba(0,0,0,0.4);padding:4px 10px;border-radius:14px;font-size:12px;border:1px solid #7c3aed">
-      08:00
-    </div>
-    <button class="btn-3d sm" id="btnQuit">Quit</button>
-  </div>
 
-  <div class="prow" id="pTop"></div>
-  <div id="bw"><svg id="svg" viewBox="0 0 600 600"></svg></div>
-  <div class="prow" id="pBot"></div>
-
-  <div id="say" style="text-align:center;font-weight:900;font-size:15px;min-height:22px;color:var(--gold);margin-top:6px;text-shadow:0 2px 4px rgba(0,0,0,0.8)">
-    Tap dice to roll!
-  </div>
-
-  <div style="display:flex;justify-content:center;margin-top:4px">
-    <div class="dice-stage" id="diceSlot">
-      <div id="cube">
-        <div class="face" style="transform:translateZ(28px)">
-          <div></div><div></div><div></div><div></div><div class="pip red on"></div><div></div><div></div><div></div><div></div>
+    <!-- Top Corner Players Row (Red & Green) -->
+    <div class="station-row">
+      <!-- Top-Left: RED Station -->
+      <div class="p-station" id="station-red">
+        <div class="p-avatar" style="background:var(--red)">P1</div>
+        <div class="p-meta">
+          <span class="p-name" id="name-red">Red</span>
+          <span class="p-score" id="score-red">Score: 0</span>
         </div>
-        <div class="face" style="transform:rotateY(90deg) translateZ(28px)">
-          <div class="pip on"></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div class="pip on"></div>
-        </div>
-        <div class="face" style="transform:rotateX(90deg) translateZ(28px)">
-          <div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div>
-        </div>
-        <div class="face" style="transform:rotateX(-90deg) translateZ(28px)">
-          <div class="pip on"></div><div></div><div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div>
-        </div>
-        <div class="face" style="transform:rotateY(-90deg) translateZ(28px)">
-          <div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div>
-        </div>
-        <div class="face" style="transform:rotateY(180deg) translateZ(28px)">
-          <div class="pip on"></div><div></div><div class="pip on"></div><div class="pip on"></div><div></div><div class="pip on"></div><div class="pip on"></div><div></div><div class="pip on"></div>
+        <!-- Red Corner 3D Dice -->
+        <div class="corner-dice-cradle" id="dice-cradle-red" onclick="onDiceTapped('red')">
+          <div class="pulse-ring"></div>
+          <div class="cube-box" id="cube-red">
+            <div class="d-face" style="transform:translateZ(21px)"><div></div><div></div><div></div><div></div><div class="pip red on"></div><div></div><div></div><div></div><div></div></div>
+            <div class="d-face" style="transform:rotateY(90deg) translateZ(21px)"><div class="pip on"></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateX(90deg) translateZ(21px)"><div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateX(-90deg) translateZ(21px)"><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateY(-90deg) translateZ(21px)"><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateY(180deg) translateZ(21px)"><div class="pip on"></div><div></div><div class="pip on"></div><div class="pip on"></div><div></div><div class="pip on"></div><div class="pip on"></div><div></div><div class="pip on"></div></div>
+          </div>
         </div>
       </div>
+
+      <!-- Top-Right: GREEN Station -->
+      <div class="p-station rev" id="station-green">
+        <div class="p-avatar" style="background:var(--green)">P2</div>
+        <div class="p-meta">
+          <span class="p-name" id="name-green">Green</span>
+          <span class="p-score" id="score-green">Score: 0</span>
+        </div>
+        <!-- Green Corner 3D Dice -->
+        <div class="corner-dice-cradle" id="dice-cradle-green" onclick="onDiceTapped('green')">
+          <div class="pulse-ring"></div>
+          <div class="cube-box" id="cube-green">
+            <div class="d-face" style="transform:translateZ(21px)"><div></div><div></div><div></div><div></div><div class="pip red on"></div><div></div><div></div><div></div><div></div></div>
+            <div class="d-face" style="transform:rotateY(90deg) translateZ(21px)"><div class="pip on"></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateX(90deg) translateZ(21px)"><div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateX(-90deg) translateZ(21px)"><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateY(-90deg) translateZ(21px)"><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateY(180deg) translateZ(21px)"><div class="pip on"></div><div></div><div class="pip on"></div><div class="pip on"></div><div></div><div class="pip on"></div><div class="pip on"></div><div></div><div class="pip on"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center 3D Board -->
+    <div id="bw"><svg id="svg" viewBox="0 0 600 600"></svg></div>
+
+    <!-- Bottom Corner Players Row (Blue & Yellow) -->
+    <div class="station-row">
+      <!-- Bottom-Left: BLUE Station -->
+      <div class="p-station" id="station-blue" style="opacity:0.4">
+        <div class="p-avatar" style="background:var(--blue)">P4</div>
+        <div class="p-meta">
+          <span class="p-name" id="name-blue">Blue</span>
+          <span class="p-score" id="score-blue">Score: 0</span>
+        </div>
+        <!-- Blue Corner 3D Dice -->
+        <div class="corner-dice-cradle" id="dice-cradle-blue" onclick="onDiceTapped('blue')">
+          <div class="pulse-ring"></div>
+          <div class="cube-box" id="cube-blue">
+            <div class="d-face" style="transform:translateZ(21px)"><div></div><div></div><div></div><div></div><div class="pip red on"></div><div></div><div></div><div></div><div></div></div>
+            <div class="d-face" style="transform:rotateY(90deg) translateZ(21px)"><div class="pip on"></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateX(90deg) translateZ(21px)"><div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateX(-90deg) translateZ(21px)"><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateY(-90deg) translateZ(21px)"><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateY(180deg) translateZ(21px)"><div class="pip on"></div><div></div><div class="pip on"></div><div class="pip on"></div><div></div><div class="pip on"></div><div class="pip on"></div><div></div><div class="pip on"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom-Right: YELLOW Station -->
+      <div class="p-station rev" id="station-yellow">
+        <div class="p-avatar" style="background:var(--yellow);color:#000">P2</div>
+        <div class="p-meta">
+          <span class="p-name" id="name-yellow">Yellow</span>
+          <span class="p-score" id="score-yellow">Score: 0</span>
+        </div>
+        <!-- Yellow Corner 3D Dice -->
+        <div class="corner-dice-cradle" id="dice-cradle-yellow" onclick="onDiceTapped('yellow')">
+          <div class="pulse-ring"></div>
+          <div class="cube-box" id="cube-yellow">
+            <div class="d-face" style="transform:translateZ(21px)"><div></div><div></div><div></div><div></div><div class="pip red on"></div><div></div><div></div><div></div><div></div></div>
+            <div class="d-face" style="transform:rotateY(90deg) translateZ(21px)"><div class="pip on"></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateX(90deg) translateZ(21px)"><div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateX(-90deg) translateZ(21px)"><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateY(-90deg) translateZ(21px)"><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div><div></div><div class="pip on"></div></div>
+            <div class="d-face" style="transform:rotateY(180deg) translateZ(21px)"><div class="pip on"></div><div></div><div class="pip on"></div><div class="pip on"></div><div></div><div class="pip on"></div><div class="pip on"></div><div></div><div class="pip on"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status message -->
+    <div id="say" style="text-align:center;font-weight:900;font-size:14px;color:var(--gold);margin-top:2px">
+      Ready to Roll
     </div>
   </div>
 </section>
 
-<!-- Off-screen recorder canvas -->
 <canvas id="recCanvas" width="480" height="480" style="display:none"></canvas>
 <div id="toast"></div>
 
-<!-- Victory / Result Modal -->
+<!-- Victory Modal -->
 <div id="modal">
-  <div class="c-card" style="text-align:center;max-width:380px;width:92%">
-    <svg class="icon" style="width:58px;height:58px;color:#f59e0b;margin:0 auto 8px" viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2m12 6h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2M6 3h12v7a6 6 0 0 1-12 0V3m3 14h6m-3-3v7m-4 0h8"/></svg>
-    <h2 id="winTitle" style="font-size:26px;font-weight:900;color:var(--ink)">Match Finished</h2>
-    <div id="winMsg" style="font-size:16px;font-weight:800;color:#6b21a8;margin:12px 0"></div>
-    <button class="btn-3d green" id="btnModalPlayAgain">Play Another Game</button>
+  <div class="card-3d" style="text-align:center;max-width:360px;width:90%">
+    <svg class="icon" style="width:52px;height:52px;color:var(--gold);margin:0 auto 6px" viewBox="0 0 24 24"><path d="M6 9H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2m12 6h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-2M6 3h12v7a6 6 0 0 1-12 0V3m3 14h6m-3-3v7m-4 0h8"/></svg>
+    <h2 id="winTitle" style="font-size:24px;font-weight:900">VICTORY</h2>
+    <div id="winMsg" style="font-size:15px;font-weight:800;color:#6b21a8;margin:10px 0"></div>
+    <button class="btn-3d green" id="btnModalPlayAgain">Play Again</button>
   </div>
 </div>
 
@@ -211,10 +271,10 @@ body[data-s="menu"] #menu,body[data-s="setup"] #setup,body[data-s="search"] #sea
 var $ = function(s){ return document.querySelector(s); };
 var sleep = function(ms){ return new Promise(function(r){ setTimeout(r, ms); }); };
 
-/* ================= 1. PURE LUDO ENGINE CONSTANTS ================= */
+/* ================= 1. PURE LUDO CONSTANTS ================= */
 var C = ['red','green','yellow','blue'];
 var HEX = { red:'#ff3b56', green:'#10b981', yellow:'#fbbf24', blue:'#3b82f6' };
-var DK  = { red:'#990b21', green:'#065f46', yellow:'#92400e', blue:'#1e40af' };
+var DK  = { red:'#9e0920', green:'#047857', yellow:'#b45309', blue:'#1d4ed8' };
 var START = { red:0, green:13, yellow:26, blue:39 };
 var SAFE  = new Set([0, 8, 13, 21, 26, 34, 39, 47]);
 var S = 40, FINISH = 57;
@@ -239,7 +299,7 @@ var YARD = { red:[0,0], green:[9,0], yellow:[9,9], blue:[0,9] };
 var SLOT = [[1.8,1.8],[4.2,1.8],[1.8,4.2],[4.2,4.2]];
 var FIN  = { red:[6.8,7.5], green:[7.5,6.8], yellow:[8.2,7.5], blue:[7.5,8.2] };
 
-/* ================= 2. FIREBASE CONFIG ================= */
+/* ================= 2. FIREBASE SETUP ================= */
 var firebaseConfig = {
   apiKey: "AIzaSyBEK2Vd0izr1kfEm6uvB8b4sO8fn4qn97E",
   authDomain: "casho-ludo.firebaseapp.com",
@@ -250,7 +310,6 @@ var firebaseConfig = {
   appId: "1:404242176733:web:124810d53d84201e4a5934",
   measurementId: "G-FGY3ZM5K8Q"
 };
-
 try{ firebase.initializeApp(firebaseConfig); }catch(e){}
 var db = firebase.database ? firebase.database() : null;
 
@@ -264,12 +323,12 @@ var G = null;
 var busy = false;
 var tokEl = {};
 var timerInterval = null;
-var matchDuration = 480; // 8 minutes
+var matchDuration = 480;
 
-/* ================= 3. AUDIO ENGINE ================= */
+/* ================= 3. AUDIO SYNTH ================= */
 var AC = null;
 function getAC(){ if(!AC){ var AudioCtx = window.AudioContext || window.webkitAudioContext; if(AudioCtx) AC = new AudioCtx(); } return AC; }
-function playTone(freq, dur, type, gainVol){
+function tone(freq, dur, type, gainVol){
   try{
     var ctx = getAC(); if(!ctx) return;
     var osc = ctx.createOscillator(); var g = ctx.createGain();
@@ -281,20 +340,20 @@ function playTone(freq, dur, type, gainVol){
   }catch(e){}
 }
 var sfx = {
-  roll: function(){ playTone(420, 0.08, 'square', 0.08); playTone(620, 0.1, 'sine', 0.1); },
-  hop:  function(){ playTone(540, 0.07, 'triangle', 0.14); },
-  cut:  function(){ playTone(220, 0.28, 'sawtooth', 0.2); },
-  home: function(){ [523,659,784].forEach(function(f,i){ setTimeout(function(){ playTone(f,0.12,'sine',0.15); }, i*70); }); },
-  win:  function(){ [523,659,784,1046].forEach(function(f,i){ setTimeout(function(){ playTone(f,0.18,'triangle',0.2); }, i*100); }); }
+  roll: function(){ tone(400, 0.08, 'square', 0.08); tone(600, 0.1, 'sine', 0.1); },
+  hop:  function(){ tone(530, 0.06, 'triangle', 0.14); },
+  cut:  function(){ tone(220, 0.28, 'sawtooth', 0.2); },
+  home: function(){ [523,659,784].forEach(function(f,i){ setTimeout(function(){ tone(f,0.12,'sine',0.15); }, i*70); }); },
+  win:  function(){ [523,659,784,1046].forEach(function(f,i){ setTimeout(function(){ tone(f,0.18,'triangle',0.2); }, i*100); }); }
 };
 
-/* ================= 4. 3D DICE LOGIC & ORIENTATIONS ================= */
-var ROT = {
-  1:[0,0], 2:[0,-90], 3:[-90,0], 4:[90,0], 5:[0,90], 6:[0,180]
-};
-function animateDice3D(val){
+/* ================= 4. DEDICATED CORNER DICE 3D LOGIC ================= */
+var ROT = { 1:[0,0], 2:[0,-90], 3:[-90,0], 4:[90,0], 5:[0,90], 6:[0,180] };
+
+function animateCornerDice(color, val){
   return new Promise(function(resolve){
-    var cube = $('#cube');
+    var cube = $('#cube-' + color);
+    if(!cube) return resolve();
     cube.classList.add('rolling');
     sfx.roll();
     setTimeout(function(){
@@ -302,23 +361,23 @@ function animateDice3D(val){
       cube.classList.remove('rolling');
       cube.style.transform = 'rotateX('+t[0]+'deg) rotateY('+t[1]+'deg)';
       resolve();
-    }, 620);
+    }, 580);
   });
 }
 
-/* ================= 5. VECTOR 3D BOARD DRAWING ================= */
+/* ================= 5. VECTOR BOARD RENDERING ================= */
 function drawBoard(){
   var h = '<defs>';
   C.forEach(function(c){
     h += '<radialGradient id="grad_'+c+'" cx="30%" cy="30%" r="75%"><stop offset="0%" stop-color="#fff"/><stop offset="40%" stop-color="'+HEX[c]+'"/><stop offset="100%" stop-color="'+DK[c]+'"/></radialGradient>';
   });
-  h += '<filter id="drop3d"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-opacity="0.35"/></filter></defs>';
+  h += '</defs>';
 
   /* Yards */
   C.forEach(function(c){
     var x = YARD[c][0], y = YARD[c][1];
     h += '<rect x="'+(x*S+2)+'" y="'+(y*S+2)+'" width="'+(6*S-4)+'" height="'+(6*S-4)+'" rx="22" fill="'+HEX[c]+'" stroke="'+DK[c]+'" stroke-width="4"/>';
-    h += '<rect x="'+((x+1)*S)+'" y="'+((y+1)*S)+'" width="'+(4*S)+'" height="'+(4*S)+'" rx="26" fill="#ffffff" filter="url(#drop3d)"/>';
+    h += '<rect x="'+((x+1)*S)+'" y="'+((y+1)*S)+'" width="'+(4*S)+'" height="'+(4*S)+'" rx="26" fill="#ffffff"/>';
     SLOT.forEach(function(sl){
       h += '<circle cx="'+((x+sl[0])*S)+'" cy="'+((y+sl[1])*S)+'" r="'+(S*0.62)+'" fill="'+HEX[c]+'" opacity="0.28"/>';
       h += '<circle cx="'+((x+sl[0])*S)+'" cy="'+((y+sl[1])*S)+'" r="'+(S*0.48)+'" fill="none" stroke="'+HEX[c]+'" stroke-width="2.5" stroke-dasharray="4 3"/>';
@@ -326,25 +385,25 @@ function drawBoard(){
   });
 
   /* Track cells */
-  var makeCell = function(x, y, fillCol, isStar){
-    var svgCell = '<rect x="'+(x*S+1.5)+'" y="'+(y*S+1.5)+'" width="'+(S-3)+'" height="'+(S-3)+'" rx="9" fill="'+fillCol+'" stroke="#ffffffcc" stroke-width="1.8"/>';
+  var cellSvg = function(x, y, fillCol, isStar){
+    var res = '<rect x="'+(x*S+1.5)+'" y="'+(y*S+1.5)+'" width="'+(S-3)+'" height="'+(S-3)+'" rx="9" fill="'+fillCol+'" stroke="#ffffffcc" stroke-width="1.8"/>';
     if(isStar){
-      svgCell += '<path d="M '+((x+0.5)*S)+' '+((y+0.25)*S)+' l 2.4 7.2 h 7.6 l -6.2 4.5 l 2.4 7.2 l -6.2 -4.5 l -6.2 4.5 l 2.4 -7.2 l -6.2 -4.5 h 7.6 z" fill="#f59e0b" stroke="#78350f" stroke-width="0.8"/>';
+      res += '<path d="M '+((x+0.5)*S)+' '+((y+0.25)*S)+' l 2.4 7.2 h 7.6 l -6.2 4.5 l 2.4 7.2 l -6.2 -4.5 l -6.2 4.5 l 2.4 -7.2 l -6.2 -4.5 h 7.6 z" fill="#f59e0b" stroke="#78350f" stroke-width="0.8"/>';
     }
-    return svgCell;
+    return res;
   };
 
   PATH.forEach(function(pt, i){
     var startColor = C.find(function(c){ return START[c] === i; });
     var cellFill = startColor ? HEX[startColor] : '#ffffff';
-    h += makeCell(pt[0], pt[1], cellFill, SAFE.has(i));
+    h += cellSvg(pt[0], pt[1], cellFill, SAFE.has(i));
   });
 
   C.forEach(function(c){
-    HOME[c].forEach(function(pt){ h += makeCell(pt[0], pt[1], HEX[c], false); });
+    HOME[c].forEach(function(pt){ h += cellSvg(pt[0], pt[1], HEX[c], false); });
   });
 
-  /* Center Triangle Finish */
+  /* Center Triangles */
   var m = 7.5 * S;
   var triPoly = function(a,b,c,d){ return (a*S)+','+(b*S)+' '+(c*S)+','+(d*S)+' '+m+','+m; };
   h += '<polygon points="'+triPoly(6,6,6,9)+'" fill="'+HEX.red+'"/>';
@@ -364,7 +423,6 @@ function drawBoard(){
     for(var i=0; i<4; i++){
       var g = document.createElementNS('http://www.w3.org/2000/svg','g');
       g.setAttribute('class','tok');
-      // 3D Cartoon pawn design
       g.innerHTML =
         '<ellipse class="shadow" cx="0" cy="14" rx="14" ry="5.5"/>' +
         '<g class="in-body">' +
@@ -382,9 +440,7 @@ function drawBoard(){
 }
 
 function getPosCoords(color, tokenIdx, step){
-  if(step === 0){
-    return [YARD[color][0] + SLOT[tokenIdx][0], YARD[color][1] + SLOT[tokenIdx][1]];
-  }
+  if(step === 0) return [YARD[color][0] + SLOT[tokenIdx][0], YARD[color][1] + SLOT[tokenIdx][1]];
   if(step <= 51){
     var globalIdx = (START[color] + step - 1) % 52;
     var pt = PATH[globalIdx];
@@ -397,7 +453,7 @@ function getPosCoords(color, tokenIdx, step){
   return FIN[color];
 }
 
-function placeTokenSVG(el, coords, scale){
+function placeToken(el, coords, scale){
   scale = scale || 1;
   el.style.transform = 'translate('+(coords[0]*S)+'px,'+(coords[1]*S)+'px) scale('+scale+')';
 }
@@ -415,7 +471,6 @@ function renderBoardState(){
     });
   });
 
-  // Multi-token overlap offset
   Object.keys(cellGroups).forEach(function(k){
     var group = cellGroups[k];
     group.forEach(function(item, gIdx){
@@ -424,14 +479,13 @@ function renderBoardState(){
         var ang = (gIdx / group.length) * (2 * Math.PI);
         x += Math.cos(ang) * 0.22;
         y += Math.sin(ang) * 0.22;
-        placeTokenSVG(item.el, [x, y], 0.82);
+        placeToken(item.el, [x, y], 0.82);
       } else {
-        placeTokenSVG(item.el, [x, y], 1);
+        placeToken(item.el, [x, y], 1);
       }
     });
   });
 
-  // Highlight movable tokens
   var canMoveList = (G.turn === myColor && G.dice != null && !busy) ? getMovableTokens(G.turn, G.dice) : [];
   C.forEach(function(c){
     tokEl[c].forEach(function(el, i){
@@ -440,38 +494,34 @@ function renderBoardState(){
     });
   });
 
-  // Players panels
-  var p1 = G.players[0], p2 = G.players[1];
-  $('#pTop').innerHTML =
-    '<div class="pp '+(G.turn===p1.color?'turn':'')+'">' +
-      '<span class="pp-badge" style="background:'+HEX[p1.color]+'"></span>' +
-      '<span>'+p1.name+'</span>' +
-      '<span style="margin-left:auto;color:var(--gold)">Score: '+(G.score[p1.color]||0)+'</span>' +
-    '</div>';
+  // Activate dedicated station & dice glow
+  C.forEach(function(c){
+    var stationEl = $('#station-' + c);
+    if(stationEl){
+      stationEl.classList.toggle('active-turn', G.turn === c);
+    }
+  });
 
-  $('#pBot').innerHTML =
-    '<div class="pp '+(G.turn===p2.color?'turn':'')+'">' +
-      '<span class="pp-badge" style="background:'+HEX[p2.color]+'"></span>' +
-      '<span>'+p2.name+'</span>' +
-      '<span style="margin-left:auto;color:var(--gold)">Score: '+(G.score[p2.color]||0)+'</span>' +
-    '</div>';
+  // Update scores
+  $('#score-red').textContent = 'Score: ' + (G.score.red || 0);
+  $('#score-yellow').textContent = 'Score: ' + (G.score.yellow || 0);
 
   var isMyTurn = (G.turn === myColor);
   if(isMyTurn){
-    $('#say').textContent = G.dice == null ? "Tap Dice to Roll!" : "Select a token to move";
+    $('#say').textContent = G.dice == null ? "Tap your corner dice to roll!" : "Select a token to move";
   } else {
-    $('#say').textContent = (isVsBot ? "Robot AI is thinking..." : "Opponent's Turn...");
+    $('#say').textContent = (isVsBot ? "Robot AI is rolling..." : "Opponent's turn...");
   }
 }
 
-/* ================= 6. LUDO RULES ENGINE ================= */
+/* ================= 6. RULES ENGINE ================= */
 function getMovableTokens(color, diceVal){
   if(!G || diceVal == null) return [];
   var tokens = G.tokens[color];
   var movable = [];
   tokens.forEach(function(step, idx){
     if(step === 0){
-      if(diceVal === 6) movable.push(idx); // Yard release on 6
+      if(diceVal === 6) movable.push(idx);
     } else if(step + diceVal <= FINISH){
       movable.push(idx);
     }
@@ -486,7 +536,6 @@ function executeMove(color, tokenIdx, diceVal){
 
   var capturedColors = [];
 
-  // Capture detection (only on main track 1..51)
   if(nextStep >= 1 && nextStep <= 51){
     var globalLanding = (START[color] + nextStep - 1) % 52;
     if(!SAFE.has(globalLanding)){
@@ -496,7 +545,7 @@ function executeMove(color, tokenIdx, diceVal){
             if(oppStep >= 1 && oppStep <= 51){
               var oppLanding = (START[oppColor] + oppStep - 1) % 52;
               if(oppLanding === globalLanding){
-                G.tokens[oppColor][oppIdx] = 0; // Return to yard!
+                G.tokens[oppColor][oppIdx] = 0;
                 capturedColors.push(oppColor);
               }
             }
@@ -506,12 +555,9 @@ function executeMove(color, tokenIdx, diceVal){
     }
   }
 
-  // Scoring
   G.score[color] = (G.score[color] || 0) + (nextStep === FINISH ? 50 : diceVal) + (capturedColors.length * 25);
-
   var bonusTurn = (diceVal === 6 || capturedColors.length > 0 || nextStep === FINISH);
 
-  // Check victory
   var hasWon = G.tokens[color].every(function(s){ return s === FINISH; });
   if(hasWon){
     G.winner = color;
@@ -519,16 +565,11 @@ function executeMove(color, tokenIdx, diceVal){
   }
 
   return {
-    color: color,
-    tokenIdx: tokenIdx,
-    from: currentStep,
-    to: nextStep,
-    captured: capturedColors,
-    bonusTurn: bonusTurn && !G.over
+    color: color, tokenIdx: tokenIdx, from: currentStep, to: nextStep,
+    captured: capturedColors, bonusTurn: bonusTurn && !G.over
   };
 }
 
-/* Step-by-Step Smooth Animation with Physics */
 async function animateTokenSteps(color, tokenIdx, fromStep, toStep){
   var el = tokEl[color][tokenIdx];
   el.classList.add('moving');
@@ -541,23 +582,22 @@ async function animateTokenSteps(color, tokenIdx, fromStep, toStep){
 
   for(var i = 0; i < stepsArray.length; i++){
     var pt = getPosCoords(color, tokenIdx, stepsArray[i]);
-    placeTokenSVG(el, pt, 1.15);
+    placeToken(el, pt, 1.15);
     sfx.hop();
     await sleep(150);
   }
   el.classList.remove('moving');
 }
 
-/* ================= 7. GAME CONTROLS & TURNS ================= */
-async function handleDiceRoll(){
-  if(busy || !G || G.over || G.turn !== myColor || G.dice != null) return;
+/* ================= 7. DICE & PLAYER ACTIONS ================= */
+async function onDiceTapped(color){
+  if(busy || !G || G.over || G.turn !== color || G.turn !== myColor || G.dice != null) return;
   busy = true;
 
   var val = Math.floor(Math.random() * 6) + 1;
-  await animateDice3D(val);
+  await animateCornerDice(color, val);
   G.dice = val;
 
-  // Log to audit telemetry
   logMatchEvent({ by: myColor, t: 'roll', d: val, time: Date.now() });
 
   var movable = getMovableTokens(G.turn, val);
@@ -571,7 +611,6 @@ async function handleDiceRoll(){
     return;
   }
 
-  // If only 1 token can move, auto move for snappy gameplay
   if(movable.length === 1){
     await sleep(200);
     await performPlayerMove(movable[0]);
@@ -588,20 +627,15 @@ async function performPlayerMove(tokenIdx){
   var moveRes = executeMove(myColor, tokenIdx, diceVal);
 
   logMatchEvent({
-    by: myColor,
-    t: 'move',
-    token: tokenIdx,
-    from: moveRes.from,
-    to: moveRes.to,
-    captured: moveRes.captured,
-    time: Date.now()
+    by: myColor, t: 'move', token: tokenIdx,
+    from: moveRes.from, to: moveRes.to, captured: moveRes.captured, time: Date.now()
   });
 
   await animateTokenSteps(myColor, tokenIdx, moveRes.from, moveRes.to);
 
   if(moveRes.captured.length > 0){
     sfx.cut();
-    showToast("Opponent Captured!");
+    showToast("Captured Opponent!");
   } else if(moveRes.to === FINISH){
     sfx.home();
     showToast("Token Reached Home!");
@@ -639,16 +673,16 @@ function onTokenClicked(color, tokenIdx){
   performPlayerMove(tokenIdx);
 }
 
-/* ================= 8. ROBOT (AI) ENGINE ================= */
+/* ================= 8. SMART BOT (AI) ENGINE ================= */
 async function checkBotTurn(){
   if(!isVsBot || !G || G.over || G.turn !== 'yellow') return;
   busy = true;
-  await sleep(750);
+  await sleep(700);
 
-  // Robot rolls dice
   var val = Math.floor(Math.random() * 6) + 1;
-  await animateDice3D(val);
+  await animateCornerDice('yellow', val);
   G.dice = val;
+
   logMatchEvent({ by: 'yellow', t: 'roll', d: val, isBot: true, time: Date.now() });
 
   var movable = getMovableTokens('yellow', val);
@@ -661,51 +695,34 @@ async function checkBotTurn(){
     return;
   }
 
-  // Smart AI decision:
-  // 1. Capture enemy token (+100)
-  // 2. Reach Home (+80)
-  // 3. Exit Yard (+60)
-  // 4. Move safely or advance
   var chosenIdx = movable[0];
   var bestScore = -999;
-
   movable.forEach(function(idx){
     var cur = G.tokens.yellow[idx];
     var next = (cur === 0) ? 1 : (cur + val);
     var score = next;
+    if(next === FINISH) score += 95;
+    if(cur === 0 && val === 6) score += 70;
 
-    if(next === FINISH) score += 90;
-    if(cur === 0 && val === 6) score += 65;
-
-    // Check capture
     if(next >= 1 && next <= 51){
       var land = (START.yellow + next - 1) % 52;
       if(!SAFE.has(land)){
         G.tokens.red.forEach(function(rStep){
           if(rStep >= 1 && rStep <= 51 && (START.red + rStep - 1) % 52 === land){
-            score += 120; // High priority to capture
+            score += 120;
           }
         });
       }
     }
-    if(score > bestScore){
-      bestScore = score;
-      chosenIdx = idx;
-    }
+    if(score > bestScore){ bestScore = score; chosenIdx = idx; }
   });
 
-  await sleep(400);
+  await sleep(350);
   var moveRes = executeMove('yellow', chosenIdx, val);
 
   logMatchEvent({
-    by: 'yellow',
-    t: 'move',
-    token: chosenIdx,
-    from: moveRes.from,
-    to: moveRes.to,
-    captured: moveRes.captured,
-    isBot: true,
-    time: Date.now()
+    by: 'yellow', t: 'move', token: chosenIdx,
+    from: moveRes.from, to: moveRes.to, captured: moveRes.captured, isBot: true, time: Date.now()
   });
 
   await animateTokenSteps('yellow', chosenIdx, moveRes.from, moveRes.to);
@@ -733,7 +750,7 @@ async function checkBotTurn(){
   }
 }
 
-/* ================= 9. MEDIA RECORDER PIPELINE ================= */
+/* ================= 9. MEDIA RECORDER STREAM ================= */
 var recEngine = {
   recorder: null, blobs: [], active: false, timer: null,
   start: function(mid){
@@ -748,13 +765,13 @@ var recEngine = {
         var xml = new XMLSerializer().serializeToString(svg);
         var img = new Image();
         img.onload = function(){
-          ctx.fillStyle = '#11092e';
+          ctx.fillStyle = '#170a40';
           ctx.fillRect(0,0,480,480);
           ctx.drawImage(img,0,0,480,480);
         };
         img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(xml);
       }catch(e){}
-    }, 66); // 15 FPS
+    }, 66);
 
     try{
       var stream = canvas.captureStream(15);
@@ -773,7 +790,7 @@ var recEngine = {
   },
   upload: async function(mid){
     if(!this.blobs.length) return;
-    showToast("Syncing recording to cloud...");
+    showToast("Syncing recording to Cloudinary...");
     var fd = new FormData();
     fd.append('video', new Blob(this.blobs, { type:'video/webm' }), 'match_'+mid+'.webm');
     fd.append('matchId', mid);
@@ -788,23 +805,22 @@ var recEngine = {
   }
 };
 
-/* ================= 10. ONLINE & OFFLINE MATCH START ================= */
+/* ================= 10. SESSIONS & DISPATCH ================= */
 function startNewGameSession(matchId, p1Name, p2Name, vsBotMode){
   currentMatchId = matchId;
   isVsBot = vsBotMode;
   myColor = 'red';
 
-  $('#midBadge').textContent = 'ID: ' + matchId.slice(0,10);
+  $('#name-red').textContent = p1Name;
+  $('#name-yellow').textContent = p2Name;
+  $('#midBadge').textContent = 'ID: ' + matchId.slice(0,9);
   $('#midBadge').onclick = function(){
     navigator.clipboard.writeText(matchId);
     showToast("Match ID Copied!");
   };
 
   G = {
-    players: [
-      { name: p1Name, color: 'red' },
-      { name: p2Name, color: 'yellow' }
-    ],
+    players: [{ name: p1Name, color: 'red' }, { name: p2Name, color: 'yellow' }],
     order: ['red', 'yellow'],
     tokens: { red:[0,0,0,0], yellow:[0,0,0,0] },
     turn: 'red',
@@ -818,19 +834,16 @@ function startNewGameSession(matchId, p1Name, p2Name, vsBotMode){
   renderBoardState();
   startTimer();
 
-  // Recorder starts for BOTH Online and Bot games!
   recEngine.start(matchId);
 }
 
 function logMatchEvent(eventObj){
-  if(mref){
-    mref.child('events').push(eventObj);
-  }
+  if(mref) mref.child('events').push(eventObj);
 }
 
-/* Online Matchmaking */
+/* Online PvP */
 $('#btnOnline').onclick = async function(){
-  if(!db) return alert("Firebase connection not initialized!");
+  if(!db) return alert("Firebase is not initialized!");
   showScreen('search');
   var wr = db.ref('queue/waiting'), hit = null;
 
@@ -867,7 +880,7 @@ function setupOnlineGame(mid, color, oppName){
     var ev = snap.val();
     if(ev.by !== myColor){
       if(ev.t === 'roll'){
-        animateDice3D(ev.d);
+        animateCornerDice(ev.by, ev.d);
         G.dice = ev.d;
       } else if(ev.t === 'move'){
         executeMove(ev.by, ev.token, G.dice || 1);
@@ -880,14 +893,14 @@ function setupOnlineGame(mid, color, oppName){
 
   mref.child('left').on('value', function(snap){
     if(snap.val() && snap.val() !== myColor){
-      showToast("Opponent left the match!");
+      showToast("Opponent left match!");
       onGameOver(myColor);
     }
   });
   mref.child('left').onDisconnect().set(myColor);
 }
 
-/* Robot Game Start */
+/* Robot Match Start */
 $('#btnRobot').onclick = function(){
   var mid = 'BOT_' + Date.now();
   if(db){
@@ -900,7 +913,7 @@ $('#btnRobot').onclick = function(){
   startNewGameSession(mid, myName, 'Robot AI', true);
 };
 
-/* ================= 11. UI HELPERS & GAME OVER ================= */
+/* ================= 11. HELPERS & GAME OVER ================= */
 function showScreen(name){ document.body.dataset.s = name; }
 function showToast(msg){
   var t = $('#toast');
@@ -919,7 +932,6 @@ function startTimer(){
     el.textContent = (m<10?'0':'')+m + ':' + (s<10?'0':'')+s;
     if(remaining <= 0){
       clearInterval(timerInterval);
-      // Winner by score
       var winCol = (G.score.red >= G.score.yellow) ? 'red' : 'yellow';
       onGameOver(winCol);
     }
@@ -937,12 +949,11 @@ function onGameOver(winnerColor){
     mref.child('winner').set(winnerColor);
   }
 
-  $('#winTitle').textContent = won ? "VICTORY!" : "GAME OVER";
+  $('#winTitle').textContent = won ? "VICTORY" : "GAME OVER";
   $('#winMsg').textContent = won ? "You Won the Match!" : "Opponent Won the Match!";
   $('#modal').classList.add('on');
 }
 
-$('#diceSlot').onclick = handleDiceRoll;
 $('#btnCancelSearch').onclick = function(){ if(db) db.ref('queue/waiting').remove(); showScreen('menu'); };
 $('#btnQuit').onclick = function(){
   if(confirm("Quit this match?")){
